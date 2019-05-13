@@ -55,7 +55,7 @@ public class Coordinator{
     }
 
 
-    private class CoordinatorReceiver implements Runnable {
+    private class CoordinatorReceiver extends Thread {
 
         Socket socket;
         Coordinator coord;
@@ -74,42 +74,45 @@ public class Coordinator{
 
         @Override
         public void run(){
-            try {
-                String message = in.readLine();
-                String[] protocol = message.split(" ");
-                String type = protocol[0];
-                System.out.println(type);
+            while(true) {
 
-                switch (type){
-                    case "JOIN":
-                        System.out.println("Participant "+ protocol[1] +" has joined");
-                        ports.add(Integer.valueOf(protocol[1]));
-                        break;
-                    case "DETAILS":
-                        for (int i=1; i<protocol.length; i++){
-                            System.out.println("Sent details for participant "+protocol[i]);
-                        }
-                        break;
-                    case "VOTE_OPTIONS":
-                        System.out.print("Vote options: ");
-                        for (int i=1; i<protocol.length; i++){
-                            System.out.print(protocol[i]+" ");
-                        }
-                        break;
-                    case "OUTCOME":
-                        System.out.print("Outcome: "+protocol[1]+" from participants: ");
-                        for (int i=2; i<protocol.length;i++){
-                            System.out.print(protocol[i]+" ");
-                        }
-                        break;
+                try {
+                    String message = in.readLine();
+                    String[] protocol = message.split(" ");
+                    String type = protocol[0];
+                    System.out.println(type);
+
+                    switch (type) {
+                        case "JOIN":
+                            System.out.println("Participant " + protocol[1] + " has joined");
+                            ports.add(Integer.valueOf(protocol[1]));
+                            break;
+                        case "DETAILS":
+                            for (int i = 1; i < protocol.length; i++) {
+                                System.out.println("Sent details for participant " + protocol[i]);
+                            }
+                            break;
+                        case "VOTE_OPTIONS":
+                            System.out.print("Vote options: ");
+                            for (int i = 1; i < protocol.length; i++) {
+                                System.out.print(protocol[i] + " ");
+                            }
+                            break;
+                        case "OUTCOME":
+                            System.out.print("Outcome: " + protocol[1] + " from participants: ");
+                            for (int i = 2; i < protocol.length; i++) {
+                                System.out.print(protocol[i] + " ");
+                            }
+                            break;
+                    }
+
+                    //in.close();
+                    //out.close();
+                    //socket.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-                //in.close();
-                //out.close();
-                //socket.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
 
