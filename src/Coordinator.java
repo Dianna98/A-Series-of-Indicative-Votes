@@ -5,8 +5,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,6 +16,7 @@ public class Coordinator{
     protected Set<String> opts;
     protected ServerSocket server;
     protected ExecutorService pool;
+    protected HashSet<Integer> ports;
 
     public Coordinator(int port, int parts, Set<String> opts) throws IOException {
         this.port = port;
@@ -25,18 +26,23 @@ public class Coordinator{
         server = new ServerSocket(port);
         pool = Executors.newFixedThreadPool(parts);
 
-        while (true){
-            System.out.println("Start server...");
+        // while (true){
+        System.out.println("Start server...");
 
-            while (true){
-                Socket socket = server.accept();
-                participantsCount++;
-                pool.execute(new CoordinatorThread(socket));
-            }
+        while (true) {
+            Socket socket = server.accept();
+            participantsCount++;
+            pool.execute(new CoordinatorReceiver(socket, participantsCount, this));
         }
+        // }
     }
 
     public static void main(String[] args) throws IOException {
+//        Scanner sc=new Scanner(System.in);
+//        String s = sc.nextLine();
+//        args = s.split(" ");
+        args = new String[] {"12345","1","A","B"};
+
         int port = Integer.parseInt(args[0]);
         int parts = Integer.parseInt(args[1]);
         Set<String> opts = new HashSet<>();
@@ -49,19 +55,24 @@ public class Coordinator{
     }
 
 
-    private class CoordinatorThread extends Thread{
+    private class CoordinatorReceiver implements Runnable {
 
         Socket socket;
+        Coordinator coord;
+        int id;
         PrintWriter out;
         BufferedReader in;
 
-        public CoordinatorThread(Socket socket) throws IOException {
+        public CoordinatorReceiver(Socket socket, int id, Coordinator coord) throws IOException {
             this.socket = socket;
+            this.coord = coord;
+            this.id = id;
 
-            out = new PrintWriter(socket.getOutputStream(), true);
+            out = new PrintWriter(socket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
 
+        @Override
         public void run(){
             try {
                 String message = in.readLine();
@@ -72,6 +83,7 @@ public class Coordinator{
                 switch (type){
                     case "JOIN":
                         System.out.println("Participant "+ protocol[1] +" has joined");
+                        ports.add(Integer.valueOf(protocol[1]));
                         break;
                     case "DETAILS":
                         for (int i=1; i<protocol.length; i++){
@@ -92,8 +104,20 @@ public class Coordinator{
                         break;
                 }
 
+                //in.close();
+                //out.close();
+                //socket.close();
+
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+
+        private class CoordinatorSender implements Runnable{
+
+            @Override
+            public void run() {
+
             }
         }
     }
