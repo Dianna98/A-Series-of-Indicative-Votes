@@ -22,6 +22,7 @@ public class Participant {
         Socket socket = new Socket("localhost", cport);
         new ParticipantSend(socket).start();
         new GetDetails(socket).start();
+        new GetVoteOptions(socket).start();
 
     }
 
