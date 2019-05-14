@@ -1,132 +1,151 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import javax.naming.ldap.SortKey;
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
-import java.util.Scanner;
+import java.util.Random;
 import java.util.Set;
 
 public class Participant {
 
-    protected int cport,pport,timeout,failurecond;
-    protected Set<Integer> details = new HashSet<>();
-    protected Set<String> opts = new HashSet<>();
+    private Integer cport;
+    private Integer pport;
+    private Integer timeout;
+    private Integer flag;
 
-    public Participant(int cport, int pport, int timeout, int failurecond) throws IOException {
+
+    private class ParticipantThread extends Thread{
+
+        private Socket socket;
+        private BufferedReader in;
+        private PrintWriter out;
+        private Set<String> options = new HashSet<>();
+        private Set<Integer> participants = new HashSet<>();
+
+        ParticipantThread(Socket socket) throws IOException {
+
+            this.socket = socket;
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()),true);
+
+        }
+
+        public void run() {
+
+            try {
+
+                //send JOIN
+                String join = "JOIN " + pport;
+                out.println(join);
+
+                //get DETAILS
+                String message = in.readLine();
+                System.out.println(message);
+
+                String[] details = message.split(" ");
+                for (int i=1; i<details.length;i++){
+                    participants.add(Integer.parseInt(details[i]));
+                }
+
+                //get VOTE_OPTIONS
+                message = in.readLine();
+                System.out.println(message);
+
+                String[] votes = message.split(" ");
+                for (int i = 1; i < votes.length; i++) {
+
+                    options.add(votes[i]);
+
+                }
+
+                // generate random vote
+                String vote = vote(options);
+
+                // send vote to other participants
+                ServerSocket s = new ServerSocket(pport);
+                for(Integer p : participants){
+                    s.accept();
+                    new SendVote(p,vote).start();
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        public String vote (Set<String> options){
+            int item = new Random().nextInt(options.size());
+            int i = 0;
+            for(String v : options)
+            {
+                if (i == item)
+                    return v;
+                i++;
+            }
+            return null;
+        }
+
+    }
+
+    public Socket setSocket(Integer pport, Integer cport) throws IOException {
+        Socket socket = new Socket();
+        InetSocketAddress local = new InetSocketAddress("localhost",pport);
+        InetSocketAddress connection = new InetSocketAddress("localhost",cport);
+        socket.bind(local);
+        socket.connect(connection);
+        return socket;
+    }
+
+    public Participant(Integer cport, Integer pport, Integer timeout, Integer flag) throws IOException {
+
         this.cport = cport;
         this.pport = pport;
         this.timeout = timeout;
-        this.failurecond = failurecond;
+        this.flag = flag;
 
-        Socket socket = new Socket("localhost", cport);
-        new ParticipantSend(socket).start();
-        new GetDetails(socket).start();
-        new GetVoteOptions(socket).start();
+        Socket socket = new Socket();
+        InetSocketAddress local = new InetSocketAddress("localhost",pport);
+        InetSocketAddress connection = new InetSocketAddress("localhost",cport);
+        socket.bind(local);
+        socket.connect(connection);
+
+        new ParticipantThread(socket).start();
+
 
     }
 
     public static void main(String[] args) throws IOException {
-//        Scanner sc=new Scanner(System.in);
-//        String s = sc.nextLine();
-//        args = s.split(" ");
-        //args = new String[] {"12345","12346","5000","0","A"};
 
         int cport = Integer.parseInt(args[0]);
         int pport = Integer.parseInt(args[1]);
         int timeout = Integer.parseInt(args[2]);
-        int failurecond = Integer.parseInt(args[3]);
+        int flag = Integer.parseInt(args[3]);
 
-        new Participant(cport,pport,timeout,failurecond);
+        new Participant(cport,pport,timeout,flag);
+
     }
 
-    public class ParticipantSend extends Thread {
+    private class SendVote extends Thread{
 
         Socket socket;
+        String vote;
         PrintWriter out;
-        BufferedReader in;
 
-        public ParticipantSend(Socket socket) throws IOException {
-            this.socket = socket;
+        public SendVote(Integer p, String vote) throws IOException {
+            socket = setSocket(pport,p);
+            this.vote = vote;
 
-            out = new PrintWriter(socket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader((socket.getInputStream())));
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            out.write("JOIN " + pport);
-            System.out.println(pport+" sent JOIN protocol");
-        }
-    }
-
-    public class GetDetails extends Thread{
-
-        Socket socket;
-        PrintWriter out;
-        BufferedReader in;
-
-        public GetDetails(Socket socket) throws IOException {
-            this.socket = socket;
-
-            out = new PrintWriter(socket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader((socket.getInputStream())));
-
+            out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
         }
 
         @Override
         public void run() {
             super.run();
 
-            try {
-                String message = in.readLine();
-                String[] protocol = message.split(" ");
-
-                if (protocol[0]=="DETAILS"){
-                    System.out.println(pport+" got Details from coordinator");
-                    for(int i=1; i<protocol.length; i++){
-                        details.add(Integer.valueOf(protocol[i]));
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            out.println("VOTE " + pport + " " + vote);
         }
     }
-
-    public class GetVoteOptions extends Thread{
-
-        Socket socket;
-        PrintWriter out;
-        BufferedReader in;
-
-        public GetVoteOptions(Socket socket) throws IOException {
-            this.socket = socket;
-
-            out = new PrintWriter(socket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader((socket.getInputStream())));
-
-        }
-
-        @Override
-        public void run() {
-            super.run();
-
-            try {
-                String message = in.readLine();
-                String[] protocol = message.split(" ");
-
-                if (protocol[0]=="VOTE_OPTIONS"){
-                    System.out.println(pport+" got Vote Options list from coordinator");
-                    for(int i=1; i<protocol.length; i++){
-                        opts.add(protocol[i]);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
 }

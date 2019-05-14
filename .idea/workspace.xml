@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a21efb07-b295-4649-a40d-78e6a0b2a971" name="Default Changelist" comment="" />
+    <list default="true" id="a21efb07-b295-4649-a40d-78e6a0b2a971" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator$CoordinatorReceiver$CoordinatorSender.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator$CoordinatorReceiver.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator$CoordinatorReceiver.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$GetDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$GetDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$GetVoteOptions.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$GetVoteOptions.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$ParticipantSend.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$ParticipantSend.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Coordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Coordinator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Participant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Participant.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -10,14 +21,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.51059">
+    <splitter split-orientation="horizontal" split-proportion="0.4028103">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/Coordinator.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="248">
-                  <caret line="43" column="2" selection-start-line="43" selection-start-column="2" selection-end-line="43" selection-end-column="2" />
+                <state relative-caret-position="232">
+                  <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="43" selection-end-column="45" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -32,8 +43,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/Participant.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="289">
-                  <caret line="32" column="10" selection-start-line="32" selection-start-column="10" selection-end-line="32" selection-end-column="10" />
+                <state relative-caret-position="238">
+                  <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="40" selection-end-column="56" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -60,12 +71,13 @@
       <list>
         <option value="$PROJECT_DIR$/src/Server.java" />
         <option value="$PROJECT_DIR$/src/Client.java" />
-        <option value="$PROJECT_DIR$/src/Participant.java" />
+        <option value="$PROJECT_DIR$/src/Coord.java" />
         <option value="$PROJECT_DIR$/src/Coordinator.java" />
+        <option value="$PROJECT_DIR$/src/Participant.java" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="y" value="7" />
     <option name="width" value="914" />
     <option name="height" value="736" />
@@ -74,31 +86,12 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="A-Series-of-Indicative-Votes" type="b2602c69:ProjectViewProjectNode" />
-              <item name="A-Series-of-Indicative-Votes" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="A-Series-of-Indicative-Votes" type="b2602c69:ProjectViewProjectNode" />
-              <item name="A-Series-of-Indicative-Votes" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557788885746" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557866975938" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -177,15 +170,17 @@
       <workItem from="1557749483042" duration="10748000" />
       <workItem from="1557786140825" duration="2606000" />
       <workItem from="1557789869182" duration="1587000" />
-      <workItem from="1557841925136" duration="501000" />
+      <workItem from="1557841925136" duration="690000" />
+      <workItem from="1557842673253" duration="8806000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23698000" />
+    <option name="totallyTimeSpent" value="32693000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="7" width="914" height="736" extended-state="0" />
+    <frame x="0" y="7" width="914" height="736" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.22163388" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -196,7 +191,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32956383" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.33830845" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.33764136" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3990307" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -226,25 +221,19 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/Coordinator.java</url>
-          <line>39</line>
-          <properties class="Coordinator" method="main">
+          <line>35</line>
+          <properties class="Coord">
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/Participant.java</url>
-          <line>27</line>
+          <line>32</line>
           <properties class="Participant">
             <option name="EMULATED" value="true" />
           </properties>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Participant.java</url>
-          <line>32</line>
-          <properties />
-          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -259,10 +248,10 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Server.java" />
-    <entry file="file://$PROJECT_DIR$/src/Participant.java">
+    <entry file="file://$PROJECT_DIR$/src/Coord.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="32" column="10" selection-start-line="32" selection-start-column="10" selection-end-line="32" selection-end-column="10" />
+        <state relative-caret-position="398">
+          <caret line="33" column="24" lean-forward="true" selection-end-line="98" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -271,8 +260,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Coordinator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="43" column="2" selection-start-line="43" selection-start-column="2" selection-end-line="43" selection-end-column="2" />
+        <state relative-caret-position="232">
+          <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="43" selection-end-column="45" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Participant.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="40" selection-end-column="56" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -1,127 +1,115 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Scanner;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class Coordinator{
+public class Coordinator {
 
-    protected int port,parts,participantsCount=0;
-    protected Set<String> opts;
-    protected ServerSocket server;
-    protected ExecutorService pool;
-    protected HashSet<Integer> ports;
+    private Integer port;
+    private Integer parts;
+    private Set<String> options;
+    private HashMap<Integer,Socket> participants = new HashMap<>();
+    private int count =0;
 
-    public Coordinator(int port, int parts, Set<String> opts) throws IOException {
+    private class CoordinatorThread extends Thread{
+
+        private Socket socket;
+        private BufferedReader in;
+        private PrintWriter out;
+
+        CoordinatorThread(Socket socket) throws IOException {
+
+            this.socket = socket;
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+
+        }
+
+        public void run(){
+
+            try {
+                String message = in.readLine();
+
+                if(message.contains("JOIN")){
+                    System.out.println(message);
+                    String[] protocol = message.split(" ");
+                    participants.put(Integer.valueOf(protocol[1]),socket);
+                    //System.out.println(protocol[1]+"    "+socket.getPort());
+
+                }
+
+                if(participants.size() == parts){
+
+                    String votes = "VOTE_OPTIONS";
+
+                    for (String opt : options){
+                        votes = votes + " " + opt;
+                    }
+
+                    for (Socket s : participants.values()){
+                        String details = "DETAILS";
+                        out = new PrintWriter(new OutputStreamWriter(s.getOutputStream()),true);
+
+                        for (Map.Entry<Integer,Socket> p : participants.entrySet()){
+                            if (!s.equals(p.getValue())){
+                                details = details + " " + p.getKey();
+                            }
+                        }
+
+                        out.println(details);
+                        out.println(votes);
+                    }
+
+                }
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+
+    public Coordinator(Integer port, Integer parts, Set<String> options) throws IOException {
+
         this.port = port;
         this.parts = parts;
-        this.opts = opts;
+        this.options = options;
 
-        server = new ServerSocket(port);
-        pool = Executors.newFixedThreadPool(parts);
+        ServerSocket serverSocket;
 
-        // while (true){
-        System.out.println("Start server...");
 
-        while (true) {
-            Socket socket = server.accept();
-            participantsCount++;
-            pool.execute(new CoordinatorReceiver(socket, participantsCount, this));
-        }
-        // }
+            serverSocket = new ServerSocket(this.port);
+            System.out.println("Starting Coordinator...");
+
+            while (count<parts){
+                Socket socket = serverSocket.accept();
+                count++;
+                new CoordinatorThread(socket).start();
+            }
+
+
+
     }
 
     public static void main(String[] args) throws IOException {
-//        Scanner sc=new Scanner(System.in);
-//        String s = sc.nextLine();
-//        args = s.split(" ");
-//        args = new String[] {"12345","1","A","B"};
 
         int port = Integer.parseInt(args[0]);
         int parts = Integer.parseInt(args[1]);
-        Set<String> opts = new HashSet<>();
+        Set<String> options = new HashSet<>();
 
-        for (int i = 2; i<args.length; i++){
-            opts.add(args[i]);
+        for (int i = 2; i < args.length; i++) {
+            options.add(args[i]);
         }
 
-        new Coordinator(port,parts,opts);
+        new Coordinator(port, parts,options);
+
     }
 
-
-    private class CoordinatorReceiver extends Thread {
-
-        Socket socket;
-        Coordinator coord;
-        int id;
-        PrintWriter out;
-        BufferedReader in;
-
-        public CoordinatorReceiver(Socket socket, int id, Coordinator coord) throws IOException {
-            this.socket = socket;
-            this.coord = coord;
-            this.id = id;
-
-            out = new PrintWriter(socket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        }
-
-        @Override
-        public void run(){
-            while(true) {
-
-                try {
-                    String message = in.readLine();
-                    String[] protocol = message.split(" ");
-                    String type = protocol[0];
-                    System.out.println(type);
-
-                    switch (type) {
-                        case "JOIN":
-                            System.out.println("Participant " + protocol[1] + " has joined");
-                            ports.add(Integer.valueOf(protocol[1]));
-                            break;
-                        case "DETAILS":
-                            for (int i = 1; i < protocol.length; i++) {
-                                System.out.println("Sent details for participant " + protocol[i]);
-                            }
-                            break;
-                        case "VOTE_OPTIONS":
-                            System.out.print("Vote options: ");
-                            for (int i = 1; i < protocol.length; i++) {
-                                System.out.print(protocol[i] + " ");
-                            }
-                            break;
-                        case "OUTCOME":
-                            System.out.print("Outcome: " + protocol[1] + " from participants: ");
-                            for (int i = 2; i < protocol.length; i++) {
-                                System.out.print(protocol[i] + " ");
-                            }
-                            break;
-                    }
-
-                    //in.close();
-                    //out.close();
-                    //socket.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        private class CoordinatorSender implements Runnable{
-
-            @Override
-            public void run() {
-
-            }
-        }
-    }
 }
