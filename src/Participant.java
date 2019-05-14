@@ -30,7 +30,7 @@ public class Participant {
 //        Scanner sc=new Scanner(System.in);
 //        String s = sc.nextLine();
 //        args = s.split(" ");
-        args = new String[] {"12345","12346","5000","0","A"};
+        //args = new String[] {"12345","12346","5000","0","A"};
 
         int cport = Integer.parseInt(args[0]);
         int pport = Integer.parseInt(args[1]);

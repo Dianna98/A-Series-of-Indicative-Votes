@@ -41,7 +41,7 @@ public class Coordinator{
 //        Scanner sc=new Scanner(System.in);
 //        String s = sc.nextLine();
 //        args = s.split(" ");
-        args = new String[] {"12345","1","A","B"};
+//        args = new String[] {"12345","1","A","B"};
 
         int port = Integer.parseInt(args[0]);
         int parts = Integer.parseInt(args[1]);
