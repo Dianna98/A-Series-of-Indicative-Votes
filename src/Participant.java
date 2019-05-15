@@ -62,6 +62,7 @@ public class Participant {
                 String vote = vote(options);
 
                 socket.close();
+
                 // send vote to other participants
                 for(Integer p : participants){
                     Socket s = setSocket(pport,p);
@@ -69,8 +70,10 @@ public class Participant {
                     s.close();
                 }
 
+                // get votes from other participants;
+                for(Integer p : participants){
 
-//                }
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -162,6 +165,40 @@ public class Participant {
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
+        }
+    }
+
+    private class GetVotes extends Thread{
+
+        ServerSocket serverSocket;
+        BufferedReader in;
+
+        public GetVotes() throws IOException {
+            serverSocket = new ServerSocket(pport);
+            count = 0;
+
+            while (count<participants.size()){
+                System.out.println("here we are");
+                Socket socket = serverSocket.accept();
+                System.out.println(socket);
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String message = in.readLine();
+                System.out.println(message);
+                String[] vote = message.split(" ");
+                votes.add(vote[2]);
+                socket.close();
+                count++;
+                System.out.println("Count : "+count);
+
+            }
+
+
+        }
+
+        @Override
+        public void run() {
+            super.run();
+
         }
     }
 
