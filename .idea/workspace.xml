@@ -3,12 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="a21efb07-b295-4649-a40d-78e6a0b2a971" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator$CoordinatorReceiver$CoordinatorSender.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator$CoordinatorReceiver.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator$CoordinatorReceiver.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator$CoordinatorReceiver.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Coordinator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$GetDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$GetDetails.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$GetVoteOptions.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$GetVoteOptions.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$ParticipantSend.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$ParticipantSend.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$GetDetails.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$GetVoteOptions.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant$ParticipantSend.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/A-Series-of-Indicative-Votes/Participant.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Coordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Coordinator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Participant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Participant.java" afterDir="false" />
@@ -21,14 +20,14 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.4028103">
+    <splitter split-orientation="horizontal" split-proportion="0.3903177">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/Coordinator.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="232">
-                  <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="43" selection-end-column="45" />
+                <state relative-caret-position="894">
+                  <caret line="90" column="40" selection-start-line="90" selection-start-column="40" selection-end-line="90" selection-end-column="40" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -43,8 +42,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/Participant.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="238">
-                  <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="40" selection-end-column="56" />
+                <state relative-caret-position="520">
+                  <caret line="97" column="13" selection-start-line="97" selection-start-column="13" selection-end-line="97" selection-end-column="13" />
                   <folding>
                     <element signature="imports" expanded="true" />
                   </folding>
@@ -77,7 +76,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="7" />
     <option name="width" value="914" />
     <option name="height" value="736" />
@@ -91,7 +90,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557866975938" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1557881571007" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -171,15 +170,15 @@
       <workItem from="1557786140825" duration="2606000" />
       <workItem from="1557789869182" duration="1587000" />
       <workItem from="1557841925136" duration="690000" />
-      <workItem from="1557842673253" duration="8806000" />
+      <workItem from="1557842673253" duration="20484000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32693000" />
+    <option name="totallyTimeSpent" value="44371000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="7" width="914" height="736" extended-state="1" />
+    <frame x="-8" y="-8" width="1382" height="752" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.22163388" />
@@ -201,7 +200,7 @@
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="12" />
+      <window_info anchor="bottom" id="Messages" order="12" weight="0.32956383" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -215,28 +214,6 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/Coordinator.java</url>
-          <line>35</line>
-          <properties class="Coord">
-            <option name="EMULATED" value="true" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/Participant.java</url>
-          <line>32</line>
-          <properties class="Participant">
-            <option name="EMULATED" value="true" />
-          </properties>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/Client.java" />
@@ -260,8 +237,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Coordinator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="43" selection-end-column="45" />
+        <state relative-caret-position="894">
+          <caret line="90" column="40" selection-start-line="90" selection-start-column="40" selection-end-line="90" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -270,8 +247,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Participant.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="34" lean-forward="true" selection-start-line="34" selection-end-line="40" selection-end-column="56" />
+        <state relative-caret-position="520">
+          <caret line="97" column="13" selection-start-line="97" selection-start-column="13" selection-end-line="97" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

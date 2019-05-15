@@ -37,7 +37,6 @@ public class Coordinator {
                     System.out.println(message);
                     String[] protocol = message.split(" ");
                     participants.put(Integer.valueOf(protocol[1]),socket);
-                    //System.out.println(protocol[1]+"    "+socket.getPort());
 
                 }
 

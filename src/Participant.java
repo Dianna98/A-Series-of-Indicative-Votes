@@ -1,11 +1,8 @@
-import javax.naming.ldap.SortKey;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Participant {
 
@@ -13,15 +10,17 @@ public class Participant {
     private Integer pport;
     private Integer timeout;
     private Integer flag;
-
+    private Set<String> options = new HashSet<>();
+    private Set<Integer> participants = new HashSet<>();
+    private List<String> votes = new ArrayList<>();
+    private Integer count = 0;
 
     private class ParticipantThread extends Thread{
 
         private Socket socket;
         private BufferedReader in;
         private PrintWriter out;
-        private Set<String> options = new HashSet<>();
-        private Set<Integer> participants = new HashSet<>();
+
 
         ParticipantThread(Socket socket) throws IOException {
 
@@ -35,11 +34,11 @@ public class Participant {
 
             try {
 
-                //send JOIN
+                // send JOIN
                 String join = "JOIN " + pport;
                 out.println(join);
 
-                //get DETAILS
+                // get DETAILS
                 String message = in.readLine();
                 System.out.println(message);
 
@@ -48,7 +47,7 @@ public class Participant {
                     participants.add(Integer.parseInt(details[i]));
                 }
 
-                //get VOTE_OPTIONS
+                // get VOTE_OPTIONS
                 message = in.readLine();
                 System.out.println(message);
 
@@ -62,13 +61,16 @@ public class Participant {
                 // generate random vote
                 String vote = vote(options);
 
+                socket.close();
                 // send vote to other participants
-                ServerSocket s = new ServerSocket(pport);
                 for(Integer p : participants){
-                    s.accept();
-                    new SendVote(p,vote).start();
+                    Socket s = setSocket(pport,p);
+                    new SendVote(s,vote).start();
+                    s.close();
                 }
 
+
+//                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -113,8 +115,6 @@ public class Participant {
         socket.connect(connection);
 
         new ParticipantThread(socket).start();
-
-
     }
 
     public static void main(String[] args) throws IOException {
@@ -134,8 +134,8 @@ public class Participant {
         String vote;
         PrintWriter out;
 
-        public SendVote(Integer p, String vote) throws IOException {
-            socket = setSocket(pport,p);
+        public SendVote(Socket socket, String vote) throws IOException {
+            this.socket = socket;
             this.vote = vote;
 
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -144,8 +144,55 @@ public class Participant {
         @Override
         public void run() {
             super.run();
+            String message = "VOTE " + pport + " " + vote;
+            System.out.println("SENT : "+ message);
+            //System.out.println(socket.toString());
+            out.println(message);
+            //out.close();
 
-            out.println("VOTE " + pport + " " + vote);
+//            try {
+//                new GetVote(socket).run();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+//            try {
+//                socket.close();
+//                System.out.println("Socket closed");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }
+    }
+
+    private class GetVote extends Thread {
+
+        Socket socket;
+        BufferedReader in;
+
+        public GetVote(Socket socket) throws IOException {
+            this.socket = socket;
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        }
+
+        @Override
+        public void run() {
+            super.run();
+
+            try {
+                //System.out.println(socket.toString());
+                String message = in.readLine();
+                //System.out.println("WTF?!");
+                System.out.println(message);
+
+                String[] vote = message.split(" ");
+                votes.add(vote[2]);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }
