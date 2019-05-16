@@ -102,6 +102,7 @@ public class Coordinator {
 
                     // when all participants joined the game, send them DETAILS and VOTE_OPTIONS
                     if ((participants.size() == parts) && send) {
+                        System.out.println("All participants have joined.");
 
                         send = false;
 
