@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,6 +14,8 @@ public class Coordinator {
     private Set<String> options;
     private HashMap<Integer,Socket> participants = new HashMap<>();
     private int count =0;
+    private int outputCount=0;
+    private HashMap<String,Set<Integer>> outcomes = new HashMap<>();
 
     private class CoordinatorThread extends Thread{
 
@@ -29,45 +32,58 @@ public class Coordinator {
         }
 
         public void run(){
+            boolean send = true;
+            String message;
 
             try {
-                String message = in.readLine();
+                while ((message = in.readLine())!=null) {
 
-                if(message.contains("JOIN")){
-                    System.out.println(message);
-                    String[] protocol = message.split(" ");
-                    participants.put(Integer.valueOf(protocol[1]),socket);
+                    if (message.contains("JOIN")) {
+                        System.out.println(message);
+                        String[] protocol = message.split(" ");
+                        participants.put(Integer.valueOf(protocol[1]), socket);
 
-                }
-
-                if(participants.size() == parts){
-
-                    String votes = "VOTE_OPTIONS";
-
-                    for (String opt : options){
-                        votes = votes + " " + opt;
                     }
 
-                    for (Socket s : participants.values()){
-                        String details = "DETAILS";
-                        out = new PrintWriter(new OutputStreamWriter(s.getOutputStream()),true);
+                    if ((participants.size() == parts) && send) {
 
-                        for (Map.Entry<Integer,Socket> p : participants.entrySet()){
-                            if (!s.equals(p.getValue())){
-                                details = details + " " + p.getKey();
-                            }
+                        send = false;
+
+                        String votes = "VOTE_OPTIONS";
+
+                        for (String opt : options) {
+                            votes = votes + " " + opt;
                         }
 
-                        out.println(details);
-                        out.println(votes);
+                        for (Socket s : participants.values()) {
+                            String details = "DETAILS";
+                            out = new PrintWriter(new OutputStreamWriter(s.getOutputStream()), true);
+
+                            for (Map.Entry<Integer, Socket> p : participants.entrySet()) {
+                                if (!s.equals(p.getValue())) {
+                                    details = details + " " + p.getKey();
+                                }
+                            }
+
+                            out.println(details);
+                            out.println(votes);
+                        }
+
                     }
 
-                }
+                    if (message.contains("OUTCOME")) {
+                        outputCount++;
+                        System.out.println(message);
 
+                        String[] outcome = message.split(" ");
+
+
+                    }
+                }
 
 
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
 
         }
@@ -87,7 +103,7 @@ public class Coordinator {
             serverSocket = new ServerSocket(this.port);
             System.out.println("Starting Coordinator...");
 
-            while (count<parts){
+            while (true){
                 Socket socket = serverSocket.accept();
                 count++;
                 new CoordinatorThread(socket).start();
@@ -106,6 +122,7 @@ public class Coordinator {
         for (int i = 2; i < args.length; i++) {
             options.add(args[i]);
         }
+
 
         new Coordinator(port, parts,options);
 

@@ -12,8 +12,9 @@ public class Participant {
     private Integer flag;
     private Set<String> options = new HashSet<>();
     private Set<Integer> participants = new HashSet<>();
-    private List<String> votes = new ArrayList<>();
+    private HashMap<Integer,String> votes = new HashMap<>();
     private Integer count = 0;
+    private String vote;
 
     private class ParticipantThread extends Thread{
 
@@ -51,37 +52,71 @@ public class Participant {
                 message = in.readLine();
                 System.out.println(message);
 
-                String[] votes = message.split(" ");
-                for (int i = 1; i < votes.length; i++) {
+                String[] v = message.split(" ");
+                for (int i = 1; i < v.length; i++) {
 
-                    options.add(votes[i]);
+                    options.add(v[i]);
 
                 }
 
                 // generate random vote
-                String vote = vote(options);
+                vote = randomiseVote(options);
+                System.out.println("This participant voted "+vote+".");
+                votes.put(pport,vote);
 
                 socket.close();
 
-                // send vote to other participants
-                for(Integer p : participants){
-                    Socket s = setSocket(pport,p);
-                    new SendVote(s,vote).start();
-                    s.close();
+                // receive votes from other participants
+                Thread search = new StartSearching();
+                search.start();
+                sleep(timeout);
+                //search.interrupt();
+
+                //sleep(200);
+
+                // send vote to the other participants
+                Thread sending = new StartSending();
+                sending.start();
+                sleep(timeout);
+
+                //search.interrupt();
+
+                //sleep(1000);
+
+                if (flag == 2){
+                    System.out.println("The participant failed right before sending the output.");
+
+                } else if (flag == 0) {
+                    // decide outcome
+                    String outcome = decideOutcome(votes);
+                    Set<Integer> whoVoted = votes.keySet();
+
+                    String outcomeMessage = "OUTCOME " + outcome;
+                    for (Integer p : whoVoted) {
+                        outcomeMessage = outcomeMessage + " " + p;
+                    }
+                    System.out.println(outcomeMessage);
+
+                    socket = new Socket("localhost",cport);
+                    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()),true);
+                    out.println(outcomeMessage);
+
+//                    new SearchAllVotes().start();
+//                    sleep(200);
+//                    new SendAllVotes();
+
+
+                    System.out.println("The participant did not fail.");
                 }
 
-                // get votes from other participants;
-                for(Integer p : participants){
-
-                }
-
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
 
         }
 
-        public String vote (Set<String> options){
+        public String randomiseVote(Set<String> options){
             int item = new Random().nextInt(options.size());
             int i = 0;
             for(String v : options)
@@ -131,105 +166,186 @@ public class Participant {
 
     }
 
-    private class SendVote extends Thread{
+    public HashMap<String,Integer> getVotes (HashMap<Integer,String> votes){
+        HashMap<String,Integer> out = new HashMap<>();
+        int nr;
 
-        Socket socket;
-        String vote;
-        PrintWriter out;
-
-        public SendVote(Socket socket, String vote) throws IOException {
-            this.socket = socket;
-            this.vote = vote;
-
-            out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            String message = "VOTE " + pport + " " + vote;
-            System.out.println("SENT : "+ message);
-            //System.out.println(socket.toString());
-            out.println(message);
-            //out.close();
-
-//            try {
-//                new GetVote(socket).run();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-//            try {
-//                socket.close();
-//                System.out.println("Socket closed");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-        }
-    }
-
-    private class GetVotes extends Thread{
-
-        ServerSocket serverSocket;
-        BufferedReader in;
-
-        public GetVotes() throws IOException {
-            serverSocket = new ServerSocket(pport);
-            count = 0;
-
-            while (count<participants.size()){
-                System.out.println("here we are");
-                Socket socket = serverSocket.accept();
-                System.out.println(socket);
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                String message = in.readLine();
-                System.out.println(message);
-                String[] vote = message.split(" ");
-                votes.add(vote[2]);
-                socket.close();
-                count++;
-                System.out.println("Count : "+count);
-
+        for (String v : votes.values()){
+            if (out.containsKey(v)){
+                nr = out.get(v);
+                out.put(v,nr+1);
+            } else {
+                out.put(v,1);
             }
-
-
         }
-
-        @Override
-        public void run() {
-            super.run();
-
-        }
+        return out;
     }
 
-    private class GetVote extends Thread {
+    public String decideOutcome(HashMap<Integer,String> votes){
+        int parts = votes.size();
+        int majority = parts/2+1;
+        HashMap<String,Integer> stats = getVotes(votes);
 
-        Socket socket;
-        BufferedReader in;
-
-        public GetVote(Socket socket) throws IOException {
-            this.socket = socket;
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
+        for (Map.Entry<String,Integer> v : stats.entrySet()){
+            if (v.getValue()>=majority){
+                return v.getKey();
+            }
         }
+
+        return null;
+    }
+
+    public Set<Integer> getMajority(HashMap<Integer,String> votes){
+        String vote = decideOutcome(votes);
+        Set<Integer> out = new HashSet<>();
+
+        if (vote!=null) {
+            for (Map.Entry<Integer, String> v : votes.entrySet()) {
+                if (v.getValue().equals(vote)) {
+                    out.add(v.getKey());
+                }
+            }
+        }
+        return out;
+    }
+
+
+    private class StartSearching extends Thread{
+        StartSearching(){}
 
         @Override
         public void run() {
             super.run();
 
             try {
-                //System.out.println(socket.toString());
-                String message = in.readLine();
-                //System.out.println("WTF?!");
-                System.out.println(message);
+                ServerSocket serverSocket = new ServerSocket(pport);
+                while (count<participants.size()){
+                    Socket socket = serverSocket.accept();
+                    count++;
+                    new GetVotes(socket).start();
+                }
+                //sleep(500);
+                serverSocket.close();
+                count=0;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    private class GetVotes extends Thread{
+
+        Socket socket;
+        BufferedReader in;
+
+        public GetVotes(Socket socket) throws IOException {
+            this.socket = socket;
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            try {
+                String message = in.readLine();
                 String[] vote = message.split(" ");
-                votes.add(vote[2]);
+                System.out.println(message);
+                votes.put(Integer.parseInt(vote[1]), vote[2]);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
 
+    private class StartSending extends Thread{
+
+        @Override
+        public void run() {
+            super.run();
+
+            int random = participants.size();
+            int i=0;
+
+            if (flag == 1){
+                random = new Random().nextInt(participants.size());
+            }
+            for (Integer p : participants){
+                if (i<random) {
+                    try {
+                        Socket socket = new Socket("localhost", p);
+
+                        PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+                        out.println("VOTE " + pport + " " + vote);
+
+                        sleep(500);
+                        socket.close();
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    break;
+                }
+                i++;
+            }
+
+            if (flag==1){
+                System.out.println("The participant failed after sending vote to " + i +" other participant(s).");
+            }
+        }
+    }
+
+    private class SearchAllVotes extends Thread {
+
+        SearchAllVotes(){}
+
+        @Override
+        public void run() {
+            super.run();
+
+            try {
+                ServerSocket serverSocket = new ServerSocket(pport);
+                while (count<participants.size()){
+                    Socket socket = serverSocket.accept();
+                    count++;
+                    new GetAllVotes(socket).start();
+                }
+                sleep(500);
+                serverSocket.close();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class GetAllVotes extends Thread {
+
+        Socket socket;
+        BufferedReader in;
+
+        public GetAllVotes(Socket socket) throws IOException {
+            this.socket = socket;
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            try {
+                String message = in.readLine();
+                String[] vote = message.split(" ");
+                System.out.println(message);
+
+                votes = new HashMap<>();
+
+                for(int i = 1; i<vote.length; i=i+2){
+
+                }
+                //votes.put(Integer.parseInt(vote[1]), vote[2]);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
