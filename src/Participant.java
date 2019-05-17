@@ -174,7 +174,7 @@ public class Participant {
 
                     out.println(outcomeMessage);
 
-                    System.out.println("PARTICIPANT " + pport + " sent the OUTPUT to the COORDINATOR.");
+                    System.out.println("PARTICIPANT " + pport + " sent the OUTCOME to the COORDINATOR.");
 
                     System.out.println("PARTICIPANT " + pport + " did not fail.");
 

@@ -20,6 +20,8 @@ public class Coordinator {
     private ServerSocket serverSocket;
     private boolean check = true;
     private String removed;
+    private boolean send = true;
+
 
     public static void main(String[] args) {
 
@@ -31,8 +33,18 @@ public class Coordinator {
             options.add(args[i]);
         }
 
-        // create new Coordinator
-        new Coordinator(port, parts,options);
+        // if the number of participants is 0, then there is no one to vote
+        if (parts == 0){
+            System.out.println("There is no participant to vote!");
+        }else
+        // if there is only one option in the list, there is no need to start the voting session
+        if (options.size()== 1){
+            System.out.println("There is no point in voting as there is only one vote option - " + options.toString());
+        } else {
+
+            // create new Coordinator
+            new Coordinator(port, parts, options);
+        }
 
     }
 
@@ -53,6 +65,7 @@ public class Coordinator {
             // open ServerSocket which accepts sockets from participants
             serverSocket = new ServerSocket(this.port);
 
+            // each participant connects exactly twice
             while (count<2*parts){
                 Socket socket = serverSocket.accept();
                 count++;
@@ -83,7 +96,6 @@ public class Coordinator {
         }
 
         public void run(){
-            boolean send = true;
             String message;
 
             try {
@@ -102,9 +114,10 @@ public class Coordinator {
 
                     // when all participants joined the game, send them DETAILS and VOTE_OPTIONS
                     if ((participants.size() == parts) && send) {
-                        System.out.println("All participants have joined.");
 
                         send = false;
+
+                        System.out.println("All participants have joined.");
 
                         String votes = "VOTE_OPTIONS";
 
