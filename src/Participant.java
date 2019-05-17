@@ -3,6 +3,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
+/*
+ * @author Diana-Alexandra Crintea
+ * University of Southampton
+ */
+
 public class Participant {
 
     private Integer cport;
@@ -142,19 +147,8 @@ public class Participant {
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()),true);
 
-                // if the participant fails right before sending the output, the participant sends an error signal to the Coordinator
-                if (flag == 2){
-                    String outcome = "OUTCOME none " + pport;
-                    out.println(outcome);
-                    System.out.println("PARTICIPANT " + pport + " failed right before sending the output.");
-
-                // if the participant fails while sending his vote, then it fails sending the outcome as well
-                } else if (flag == 1){
-                    String outcome = "OUTCOME none " + pport;
-                    out.println(outcome);
-
-                // if the participant does not fail
-                } else if (flag == 0) {
+                sleep(1000);
+                    if (flag == 0) {
                     // then it decides the outcome
                     String outcome = decideOutcome(votes);
                     Set<Integer> whoVoted = votes.keySet();
@@ -180,7 +174,7 @@ public class Participant {
 
                     // if the majority is not met while voting, the participant joins a new round
                     if (outcome == null) {
-                        sleep(1000);
+                        sleep(6000);
                         new Participant(cport, pport, timeout, flag);
                     }
                     //System.exit(0);
